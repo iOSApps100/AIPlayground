@@ -16,12 +16,19 @@ final class ChatViewModel {
     var isStreaming = false
     var errorText: String?
 
-    private let service: LLMService
+    private var service: LLMService
     private var streamTask: Task<Void, Never>?
 
     init(service: LLMService) {
         self.service = service
         self.errorText = service.unavailableReason
+    }
+    
+    func use(_ newService: LLMService) {
+        stop()
+        service = newService
+        messages = []
+        errorText = newService.unavailableReason
     }
 
     func send() {

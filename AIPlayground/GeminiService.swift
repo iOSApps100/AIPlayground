@@ -18,7 +18,7 @@ struct GeminiChunk: Decodable {
 
 final class GeminiService: LLMService {
     private let apiKey = ProcessInfo.processInfo.environment["GEMINI_API_KEY"] ?? ""
-    private let model = "gemini-2.5-flash"   // check AI Studio for the current name
+    private let model = "gemini-3.8-flash"   // check AI Studio for the current name
     private let systemPrompt = "You are a helpful assistant. Keep answers short and simple."
 
     var unavailableReason: String? {

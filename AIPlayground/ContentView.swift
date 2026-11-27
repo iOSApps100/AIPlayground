@@ -7,11 +7,30 @@
 
 import SwiftUI
 
+enum Provider: String, CaseIterable, Identifiable {
+    case gemini = "Gemini", ollama = "Ollama", apple = "Apple"
+    var id: String { rawValue }
+    func makeService() -> LLMService {
+        switch self {
+        case .gemini: return GeminiService()
+        case .ollama: return OllamaService()
+        case .apple:  return FoundationModelService()
+        }
+    }
+}
+
 struct ContentView: View {
-    @State private var vm = ChatViewModel(service: FoundationModelService())
+    @State private var vm = ChatViewModel(service: GeminiService())
+    @State private var provider: Provider = .gemini
 
     var body: some View {
         VStack(spacing: 0) {
+            Picker("Model", selection: $provider) {
+                ForEach(Provider.allCases) { Text($0.rawValue).tag($0) }
+            }
+            .pickerStyle(.segmented)
+            .padding()
+            .onChange(of: provider) { _, new in vm.use(new.makeService()) }
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 12) {
